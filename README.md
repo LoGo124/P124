@@ -1,2 +1,5 @@
 # P124
-My dockerized tools
+My dockerized tools:
+- Nextcloud
+- Obsidian-Sync
+- n8n
