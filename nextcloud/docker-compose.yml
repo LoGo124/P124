@@ -1,0 +1,42 @@
+services:
+  nextcloud:
+    image: nextcloud:30.0.2
+    restart: always
+
+    ports:
+      - 80
+      - 443
+    volumes:
+      - nextcloud_data:/var/www/html
+    environment:
+      - APACHE_BODY_LIMIT=${APACHE_BODY_LIMIT}
+      - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_DOMAIN}
+      - MYSQL_HOST=nextcloud_db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=${MYSQL_SECRET_PASSWORD}
+      - OVERWRITEPROTOCOL=https
+    networks:
+      - dokploy-network
+
+  nextcloud_db:
+    image: mariadb
+    restart: always
+
+    volumes:
+      - nextcloud_db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_SECRET_PASSWORD_ROOT}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=${MYSQL_SECRET_PASSWORD}
+    networks:
+      - dokploy-network
+
+volumes:
+  nextcloud_data:
+  nextcloud_db_data:
+
+networks:
+  dokploy-network:
+    external: true
